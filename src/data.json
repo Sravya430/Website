@@ -1,0 +1,145 @@
+{
+  "personal": {
+    "name": "Sravya Varada",
+    "title": "AI Engineer",
+    "email": "f20230045@pilani.bits-pilani.ac.in",
+    "phone": "+91 7829803748",
+    "github": "https://github.com/Sravya430",
+    "linkedin": "https://www.linkedin.com/in/sravya-varada-5043582a7/",
+    "location": "Bengaluru, India / Pilani, India",
+    "summary": "Computer Science undergraduate at BITS Pilani with hands-on experience building Python-based AI backends, REST API integrations, and customer-facing data pipelines. Delivered a production RAG system automating 1,000+ MCQ generations for a national education platform. Comfortable across the full stack from SQL/NoSQL data modelling to Python backend services."
+  },
+  "roles": [
+    "AI Engineer",
+    "RAG Systems Developer",
+    "RL Researcher",
+    "Backend Engineer"
+  ],
+  "experience": [
+    {
+      "company": "National Finance Olympiad",
+      "role": "Software Engineering Intern (AI)",
+      "location": "Bengaluru, India",
+      "period": "May 2025 – Sep 2025",
+      "highlights": [
+        "Built a RAG pipeline using OpenAI API and ChromaDB backed by a PostgreSQL question bank, automating generation of 1,000+ MCQs and cutting manual content creation time by 70%.",
+        "Developed and maintained Python backend services exposing REST API endpoints consumed by the web platform.",
+        "Analysed user engagement data across 15% of the active user base to uncover behavioural trends.",
+        "Designed and shipped an interactive financial literacy game used across outreach campaigns.",
+        "Maintained codebase on GitHub using a PR-based workflow, participating in code reviews."
+      ],
+      "metrics": {
+        "MCQs Generated": "1000+",
+        "Time Reduction": "70%",
+        "User Data Analysed": "15%"
+      }
+    }
+  ],
+  "projects": [
+    {
+      "title": "Real-Time Multi-Object Tracker",
+      "subtitle": "A3C Reinforcement Learning",
+      "stack": ["Python", "PyTorch", "MOT17", "OpenCV"],
+      "description": "Implemented an A3C (Asynchronous Advantage Actor-Critic) multi-worker tracking system in PyTorch.",
+      "details": [
+        "Implemented an A3C multi-worker tracking system using torch.multiprocessing.",
+        "Engineered a custom RL environment (MOT17Env) achieving stable convergence across 2 parallel workers.",
+        "Researched integration of lightweight LLM frameworks (Phi-2, Mistral-7B) for tactical edge environments."
+      ],
+      "metrics": {
+        "Parallel Workers": "2",
+        "Frameworks": "Phi-2, Mistral-7B"
+      },
+      "github": "https://github.com/Sravya430"
+    },
+    {
+      "title": "Production RAG System",
+      "subtitle": "Automated Content Generation",
+      "stack": ["OpenAI API", "ChromaDB", "PostgreSQL", "FastAPI"],
+      "description": "A high-throughput RAG pipeline for educational content generation.",
+      "details": [
+        "Automated generation of 1,000+ MCQs.",
+        "Integrated ChromaDB for efficient vector retrieval.",
+        "Built robust FastAPI backend for seamless integration."
+      ],
+      "metrics": {
+        "Automation": "70%",
+        "MCQs": "1000+"
+      },
+      "github": "https://github.com/Sravya430"
+    }
+  ],
+  "skills_v2": [
+    {
+      "category": "Programming Languages",
+      "items": [
+        { "name": "Python", "level": "Good Knowledge" },
+        { "name": "Java", "level": "Good Knowledge" },
+        { "name": "C", "level": "Good Knowledge" },
+        { "name": "JavaScript", "level": "Good Knowledge" },
+        { "name": "TypeScript", "level": "Basic Knowledge" }
+      ]
+    },
+    {
+      "category": "Web Development",
+      "items": [
+        { "name": "React", "level": "Good Knowledge" },
+        { "name": "FastAPI", "level": "Good Knowledge" },
+        { "name": "Flask", "level": "Good Knowledge" },
+        { "name": "REST APIs", "level": "Good Knowledge" }
+      ]
+    },
+    {
+      "category": "AI / Machine Learning",
+      "items": [
+        { "name": "PyTorch", "level": "Good Knowledge" },
+        { "name": "TensorFlow", "level": "Basic Knowledge" },
+        { "name": "scikit-learn", "level": "Good Knowledge" },
+        { "name": "LangChain", "level": "Good Knowledge" },
+        { "name": "RAG", "level": "Good Knowledge" },
+        { "name": "RL", "level": "Good Knowledge" }
+      ]
+    },
+    {
+      "category": "Databases",
+      "items": [
+        { "name": "PostgreSQL", "level": "Good Knowledge" },
+        { "name": "ChromaDB", "level": "Good Knowledge" },
+        { "name": "SQLite", "level": "Good Knowledge" },
+        { "name": "MongoDB", "level": "Basic Knowledge" }
+      ]
+    },
+    {
+      "category": "Tools & Platforms",
+      "items": [
+        { "name": "Git", "level": "Good Knowledge" },
+        { "name": "GitHub", "level": "Good Knowledge" },
+        { "name": "Docker", "level": "Basic Knowledge" },
+        { "name": "VS Code", "level": "Good Knowledge" }
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "B.E. Computer Science",
+      "institution": "BITS Pilani",
+      "location": "Pilani, India",
+      "period": "Oct 2023 – Present",
+      "details": "CGPA: 5.62 / 10"
+    },
+    {
+      "degree": "Higher Secondary (CBSE)",
+      "institution": "The Amaatra Academy",
+      "location": "Bengaluru, India",
+      "period": "2021 – 2023",
+      "details": "93.8%"
+    },
+    {
+      "degree": "Secondary (CBSE)",
+      "institution": "Orchids The International School",
+      "location": "Bengaluru, India",
+      "period": "2021",
+      "details": "94%"
+    }
+  ]
+}
