@@ -142,7 +142,6 @@ function App() {
       <Hero />
 
       <main className="max-w-7xl mx-auto px-4 md:px-8 space-y-32 py-32">
-        
         {/* Metrics Section */}
         <section id="metrics">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -176,6 +175,25 @@ function App() {
           </div>
         </section>
 
+        {/* Projects Section */}
+        <section id="projects">
+          <SectionHeader title="Featured Projects" subtitle="Engineering end-to-end AI systems" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+            {(data.projects as ProjectSummary[]).map((project, index) => (
+              <ProjectCard key={index} project={project} />
+            ))}
+          </div>
+        </section>
+
+        {/* Extra Placeholder Sections */}
+        <ExtraSections />
+
+        {/* Skills Section */}
+        <section id="skills">
+          <SectionHeader title="Technical Expertise" subtitle="Core competencies & specializations" />
+          <SkillUniverse />
+        </section>
+
         {/* GitHub Activity Section */}
         <section id="github">
           <SectionHeader title="GitHub Activity" subtitle="Live statistics from GitHub" />
@@ -197,18 +215,6 @@ function App() {
                   alt="GitHub contribution streak for Sravya430"
                   className="w-full rounded-xl border border-slate-800"
                 />
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <img
-                    src={`https://github-readme-stats.vercel.app/api?username=Sravya430&show_icons=true&theme=dark&hide_border=true&bg_color=020617&title_color=38bdf8&text_color=e2e8f0&icon_color=38bdf8`}
-                    alt="GitHub stats for Sravya430"
-                    className="w-full rounded-xl border border-slate-800"
-                  />
-                  <img
-                    src={`https://github-readme-stats.vercel.app/api/top-langs/?username=Sravya430&layout=compact&theme=dark&hide_border=true&bg_color=020617&title_color=38bdf8&text_color=e2e8f0&icon_color=38bdf8`}
-                    alt="Top languages for Sravya430"
-                    className="w-full rounded-xl border border-slate-800"
-                  />
-                </div>
               </div>
             </motion.div>
             <div className="space-y-4">
@@ -219,25 +225,6 @@ function App() {
               <GithubStatCard icon={<Users size={18} />} label="Following" value={isLoading ? '—' : githubStats.following} />
             </div>
           </div>
-        </section>
-
-        {/* Projects Section */}
-        <section id="projects">
-          <SectionHeader title="Featured Projects" subtitle="Engineering end-to-end AI systems" />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
-            {(data.projects as ProjectSummary[]).map((project, index) => (
-              <ProjectCard key={index} project={project} />
-            ))}
-          </div>
-        </section>
-
-        {/* Extra Placeholder Sections */}
-        <ExtraSections />
-
-        {/* Skills Section */}
-        <section id="skills">
-          <SectionHeader title="Technical Universe" subtitle="Core competencies & specializations" />
-          <SkillUniverse />
         </section>
 
         {/* Experience & Education */}
@@ -263,7 +250,7 @@ function App() {
       </main>
 
       <footer className="py-8 border-t border-slate-900 text-center text-slate-500 text-sm">
-        <p>© {new Date().getFullYear()} {data.personal.name}. Built with React, Framer Motion & AI.</p>
+        <p>© {new Date().getFullYear()} {data.personal.name}.</p>
       </footer>
 
       <ChatAssistant />

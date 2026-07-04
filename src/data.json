@@ -74,19 +74,23 @@
       "category": "Programming Languages",
       "items": [
         { "name": "Python", "level": "Good Knowledge" },
-        { "name": "Java", "level": "Good Knowledge" },
-        { "name": "C", "level": "Good Knowledge" },
-        { "name": "JavaScript", "level": "Good Knowledge" },
-        { "name": "TypeScript", "level": "Basic Knowledge" }
+        { "name": "Java (OOP)", "level": "Good Knowledge" },
+        { "name": "C", "level": "Good Knowledge" }
       ]
     },
     {
-      "category": "Web Development",
+      "category": "Computer Science Fundamentals",
       "items": [
-        { "name": "React", "level": "Good Knowledge" },
-        { "name": "FastAPI", "level": "Good Knowledge" },
-        { "name": "Flask", "level": "Good Knowledge" },
-        { "name": "REST APIs", "level": "Good Knowledge" }
+        { "name": "DSA", "level": "Good Knowledge" },
+        { "name": "Computer Networks", "level": "Good Knowledge" },
+        { "name": "Operating Systems", "level": "Good Knowledge" },
+        { "name": "Parallel Computing", "level": "Good Knowledge" }
+      ]
+    },
+    {
+      "category": "Databases",
+      "items": [
+        { "name": "PostgreSQL", "level": "Good Knowledge" }
       ]
     },
     {
@@ -101,21 +105,22 @@
       ]
     },
     {
-      "category": "Databases",
+      "category": "Web Development",
       "items": [
-        { "name": "PostgreSQL", "level": "Good Knowledge" },
-        { "name": "ChromaDB", "level": "Good Knowledge" },
-        { "name": "SQLite", "level": "Good Knowledge" },
-        { "name": "MongoDB", "level": "Basic Knowledge" }
+        { "name": "React", "level": "Good Knowledge" },
+        { "name": "Flask", "level": "Good Knowledge" },
+        { "name": "REST APIs", "level": "Good Knowledge" }
       ]
     },
     {
       "category": "Tools & Platforms",
       "items": [
+        { "name": "Vercel", "level": "Good Knowledge" },
         { "name": "Git", "level": "Good Knowledge" },
         { "name": "GitHub", "level": "Good Knowledge" },
-        { "name": "Docker", "level": "Basic Knowledge" },
-        { "name": "VS Code", "level": "Good Knowledge" }
+        { "name": "Copilot", "level": "Good Knowledge" },
+        { "name": "Claude Code", "level": "Good Knowledge" },
+        { "name": "Google Jules", "level": "Good Knowledge" }
       ]
     }
   ],
@@ -124,7 +129,7 @@
       "degree": "B.E. Computer Science",
       "institution": "BITS Pilani",
       "location": "Pilani, India",
-      "period": "Oct 2023 – Present",
+      "period": "August 2023 – Present",
       "details": "CGPA: 5.62 / 10"
     },
     {
