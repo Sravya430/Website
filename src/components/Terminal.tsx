@@ -20,7 +20,7 @@ export const Terminal: React.FC = () => {
     if (!input.trim()) return;
 
     const cmd = input.trim().toLowerCase();
-    let output: string | React.ReactNode = '';
+    let output: string | React.ReactNode;
 
     switch (cmd) {
       case 'help':

@@ -1,3 +1,4 @@
+import { useEffect, useState, type ReactNode } from 'react';
 import { Hero } from './components/Hero';
 import { ProjectCard } from './components/ProjectCard';
 import { SkillUniverse } from './components/SkillUniverse';
@@ -5,21 +6,130 @@ import { Timeline } from './components/Timeline';
 import { ChatAssistant } from './components/ChatAssistant';
 import { Terminal } from './components/Terminal';
 import { ExtraSections } from './components/ExtraSections';
-import { LeetCode } from './components/LeetCode';
 import { useSmoothScroll } from './hooks/useSmoothScroll';
 import { motion, useScroll, useSpring } from 'framer-motion';
-import { Github, Linkedin, Mail, Cpu, BarChart3, Globe, Zap, Code, GitCommit } from 'lucide-react';
+import { Github, Linkedin, Mail, Cpu, BarChart3, Globe, Zap, Code, Activity, Users, Star, GitBranch } from 'lucide-react';
 import CountUp from 'react-countup';
 import data from './data.json';
+
+interface GitHubProfile {
+  public_repos: number;
+  followers: number;
+  following: number;
+  html_url: string;
+}
+
+interface GitHubRepo {
+  stargazers_count: number;
+  language: string | null;
+  name: string;
+  html_url: string;
+}
+
+interface GitHubStats {
+  publicRepos: number;
+  followers: number;
+  following: number;
+  totalStars: number;
+  topLanguage: string;
+}
+
+interface ProjectSummary {
+  title: string;
+  subtitle: string;
+  stack: string[];
+  description: string;
+  details: string[];
+  metrics: Record<string, string>;
+  github: string;
+}
+
+interface MetricCardProps {
+  icon: ReactNode;
+  value: number;
+  suffix?: string;
+  label: string;
+  description: string;
+}
+
+interface GithubStatCardProps {
+  icon: ReactNode;
+  label: string;
+  value: string | number;
+}
+
+interface SectionHeaderProps {
+  title: string;
+  subtitle: string;
+  center?: boolean;
+}
+
+interface ContactLinkProps {
+  href: string;
+  icon: ReactNode;
+  label: string;
+}
 
 function App() {
   useSmoothScroll();
   const { scrollYProgress } = useScroll();
+  const [githubStats, setGithubStats] = useState<GitHubStats>({
+    publicRepos: 0,
+    followers: 0,
+    following: 0,
+    totalStars: 0,
+    topLanguage: '—',
+  });
+  const [isLoading, setIsLoading] = useState(true);
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
     restDelta: 0.001
   });
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const fetchGitHubStats = async () => {
+      try {
+        const [profileResponse, reposResponse] = await Promise.all([
+          fetch('https://api.github.com/users/Sravya430', { signal: controller.signal }),
+          fetch('https://api.github.com/users/Sravya430/repos?per_page=100', { signal: controller.signal }),
+        ]);
+
+        if (!profileResponse.ok || !reposResponse.ok) {
+          throw new Error('Unable to fetch GitHub data');
+        }
+
+        const profile = (await profileResponse.json()) as GitHubProfile;
+        const repos = (await reposResponse.json()) as GitHubRepo[];
+        const languageCounts = repos.reduce<Record<string, number>>((acc, repo) => {
+          if (repo.language) {
+            acc[repo.language] = (acc[repo.language] || 0) + 1;
+          }
+          return acc;
+        }, {});
+        const topLanguage = Object.entries(languageCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || '—';
+        const totalStars = repos.reduce((sum, repo) => sum + repo.stargazers_count, 0);
+
+        setGithubStats({
+          publicRepos: profile.public_repos,
+          followers: profile.followers,
+          following: profile.following,
+          totalStars,
+          topLanguage,
+        });
+      } catch (error) {
+        console.error('Failed to load GitHub statistics', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchGitHubStats();
+
+    return () => controller.abort();
+  }, []);
 
   return (
     <div className="bg-slate-950 text-slate-200 min-h-screen selection:bg-blue-500/30 selection:text-blue-200">
@@ -68,50 +178,55 @@ function App() {
 
         {/* GitHub Activity Section */}
         <section id="github">
-          <SectionHeader title="GitHub Activity" subtitle="Real-time contribution insights" />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-            <motion.div 
+          <SectionHeader title="GitHub Activity" subtitle="Live statistics from GitHub" />
+          <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-8 mt-12">
+            <motion.div
               whileHover={{ scale: 1.02 }}
-              className="md:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-6 overflow-hidden relative"
+              className="bg-slate-900 border border-slate-800 rounded-2xl p-6 overflow-hidden relative"
             >
               <div className="flex justify-between items-center mb-6">
-                 <div className="flex items-center gap-2">
-                    <GitCommit className="text-green-500" size={20} />
-                    <h4 className="font-bold text-white">Contribution Heatmap</h4>
-                 </div>
-                 <span className="text-xs text-slate-500 font-mono">Last 12 Months</span>
+                <div className="flex items-center gap-2">
+                  <Activity className="text-green-500" size={20} />
+                  <h4 className="font-bold text-white">Contribution Overview</h4>
+                </div>
+                <span className="text-xs text-slate-500 font-mono">Live from GitHub</span>
               </div>
-              {/* Simulated Heatmap */}
-              <div className="grid grid-cols-24 gap-1 h-32">
-                {Array.from({ length: 24 * 7 }).map((_, i) => (
-                  <div 
-                    key={i} 
-                    className={`rounded-sm ${
-                      Math.random() > 0.8 ? 'bg-green-500' : 
-                      Math.random() > 0.6 ? 'bg-green-700' : 
-                      Math.random() > 0.4 ? 'bg-green-900' : 'bg-slate-800'
-                    }`} 
+              <div className="space-y-4">
+                <img
+                  src={`https://github-readme-streak-stats.herokuapp.com/?user=Sravya430&theme=dark&hide_border=true&background=020617`}
+                  alt="GitHub contribution streak for Sravya430"
+                  className="w-full rounded-xl border border-slate-800"
+                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <img
+                    src={`https://github-readme-stats.vercel.app/api?username=Sravya430&show_icons=true&theme=dark&hide_border=true&bg_color=020617&title_color=38bdf8&text_color=e2e8f0&icon_color=38bdf8`}
+                    alt="GitHub stats for Sravya430"
+                    className="w-full rounded-xl border border-slate-800"
                   />
-                ))}
+                  <img
+                    src={`https://github-readme-stats.vercel.app/api/top-langs/?username=Sravya430&layout=compact&theme=dark&hide_border=true&bg_color=020617&title_color=38bdf8&text_color=e2e8f0&icon_color=38bdf8`}
+                    alt="Top languages for Sravya430"
+                    className="w-full rounded-xl border border-slate-800"
+                  />
+                </div>
               </div>
             </motion.div>
             <div className="space-y-4">
-               <GithubStatCard icon={<Code size={18} />} label="Top Language" value="Python" />
-               <GithubStatCard icon={<GitCommit size={18} />} label="Total Commits" value="450+" />
-               <GithubStatCard icon={<Zap size={18} />} label="Current Streak" value="12 Days" />
+              <GithubStatCard icon={<Code size={18} />} label="Top Language" value={isLoading ? '—' : githubStats.topLanguage} />
+              <GithubStatCard icon={<GitBranch size={18} />} label="Public Repositories" value={isLoading ? '—' : githubStats.publicRepos} />
+              <GithubStatCard icon={<Star size={18} />} label="Total Stars Earned" value={isLoading ? '—' : githubStats.totalStars} />
+              <GithubStatCard icon={<Users size={18} />} label="Followers" value={isLoading ? '—' : githubStats.followers} />
+              <GithubStatCard icon={<Users size={18} />} label="Following" value={isLoading ? '—' : githubStats.following} />
             </div>
           </div>
         </section>
-
-        {/* LeetCode Section */}
-        <LeetCode />
 
         {/* Projects Section */}
         <section id="projects">
           <SectionHeader title="Featured Projects" subtitle="Engineering end-to-end AI systems" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
-            {data.projects.map((project, index) => (
-              <ProjectCard key={index} project={project as any} />
+            {(data.projects as ProjectSummary[]).map((project, index) => (
+              <ProjectCard key={index} project={project} />
             ))}
           </div>
         </section>
@@ -157,8 +272,8 @@ function App() {
   );
 }
 
-const MetricCard = ({ icon, value, suffix, label, description }: any) => {
-  const CountUpComponent = (CountUp as any).default || CountUp;
+const MetricCard = ({ icon, value, suffix = '', label, description }: MetricCardProps) => {
+  const CountUpComponent = (CountUp as typeof CountUp & { default?: typeof CountUp }).default || CountUp;
   return (
     <motion.div 
       whileHover={{ y: -5 }}
@@ -174,7 +289,7 @@ const MetricCard = ({ icon, value, suffix, label, description }: any) => {
   );
 };
 
-const GithubStatCard = ({ icon, label, value }: any) => (
+const GithubStatCard = ({ icon, label, value }: GithubStatCardProps) => (
   <motion.div 
     whileHover={{ x: 5 }}
     className="bg-slate-900 border border-slate-800 p-4 rounded-xl flex items-center justify-between"
@@ -187,7 +302,7 @@ const GithubStatCard = ({ icon, label, value }: any) => (
   </motion.div>
 );
 
-const SectionHeader = ({ title, subtitle, center = false }: any) => (
+const SectionHeader = ({ title, subtitle, center = false }: SectionHeaderProps) => (
   <div className={center ? 'text-center' : ''}>
     <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{title}</h2>
     <div className={`h-1 w-20 bg-blue-600 mb-4 ${center ? 'mx-auto' : ''}`} />
@@ -195,7 +310,7 @@ const SectionHeader = ({ title, subtitle, center = false }: any) => (
   </div>
 );
 
-const ContactLink = ({ href, icon, label }: any) => (
+const ContactLink = ({ href, icon, label }: ContactLinkProps) => (
   <a 
     href={href} 
     target="_blank" 

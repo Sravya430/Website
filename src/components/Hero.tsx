@@ -68,10 +68,9 @@ export const Hero: React.FC = () => {
         className="pointer-events-none absolute inset-0 z-0 opacity-30"
         style={{
           background: `radial-gradient(600px circle at var(--x) var(--y), rgba(29, 78, 216, 0.15), transparent 80%)`,
-          //@ts-ignore
-          '--x': springX,
-          '--y': springY,
-        }}
+          ['--x' as string]: springX,
+          ['--y' as string]: springY,
+        } as React.CSSProperties}
       />
 
       {/* Particles Disabled due to library version mismatch causing crash */}
