@@ -73,54 +73,49 @@
     {
       "category": "Programming Languages",
       "items": [
-        { "name": "Python", "level": "Good Knowledge" },
-        { "name": "Java (OOP)", "level": "Good Knowledge" },
-        { "name": "C", "level": "Good Knowledge" }
+        { "name": "Python", "level": "Advanced" },
+        { "name": "Java (OOP)", "level": "Intermediate" },
+        { "name": "C", "level": "Intermediate" }
       ]
     },
     {
       "category": "Computer Science Fundamentals",
       "items": [
-        { "name": "DSA", "level": "Good Knowledge" },
-        { "name": "Computer Networks", "level": "Good Knowledge" },
-        { "name": "Operating Systems", "level": "Good Knowledge" },
-        { "name": "Parallel Computing", "level": "Good Knowledge" }
-      ]
-    },
-    {
-      "category": "Databases",
-      "items": [
-        { "name": "PostgreSQL", "level": "Good Knowledge" }
+        { "name": "DSA", "level": "Intermediate" },
+        { "name": "Computer Networks", "level": "Beginner" },
+        { "name": "Operating Systems", "level": "Beginner" },
+        { "name": "Parallel Computing", "level": "Intermediate" },
+        { "name": "DBMS (SQL)", "level": "Intermediate" }
       ]
     },
     {
       "category": "AI / Machine Learning",
       "items": [
-        { "name": "PyTorch", "level": "Good Knowledge" },
-        { "name": "TensorFlow", "level": "Basic Knowledge" },
-        { "name": "scikit-learn", "level": "Good Knowledge" },
-        { "name": "LangChain", "level": "Good Knowledge" },
-        { "name": "RAG", "level": "Good Knowledge" },
-        { "name": "RL", "level": "Good Knowledge" }
+        { "name": "PyTorch", "level": "Advanced" },
+        { "name": "TensorFlow", "level": "Beginner" },
+        { "name": "scikit-learn", "level": "Intermediate" },
+        { "name": "LangChain", "level": "Intermediate" },
+        { "name": "RAG", "level": "Advanced" },
+        { "name": "RL", "level": "Intermediate" }
       ]
     },
     {
       "category": "Web Development",
       "items": [
-        { "name": "React", "level": "Good Knowledge" },
-        { "name": "Flask", "level": "Good Knowledge" },
-        { "name": "REST APIs", "level": "Good Knowledge" }
+        { "name": "React", "level": "Intermediate" },
+        { "name": "Flask", "level": "Intermediate" },
+        { "name": "REST APIs", "level": "Intermediate" }
       ]
     },
     {
       "category": "Tools & Platforms",
       "items": [
-        { "name": "Vercel", "level": "Good Knowledge" },
-        { "name": "Git", "level": "Good Knowledge" },
-        { "name": "GitHub", "level": "Good Knowledge" },
-        { "name": "Copilot", "level": "Good Knowledge" },
-        { "name": "Claude Code", "level": "Good Knowledge" },
-        { "name": "Google Jules", "level": "Good Knowledge" }
+        { "name": "Vercel", "level": "Intermediate" },
+        { "name": "Git", "level": "Intermediate" },
+        { "name": "GitHub", "level": "Advanced" },
+        { "name": "Copilot", "level": "Advanced" },
+        { "name": "Claude Code", "level": "Advanced" },
+        { "name": "Google Jules", "level": "Advanced" }
       ]
     }
   ],

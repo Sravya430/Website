@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { BookOpen, ExternalLink, Github, Microscope, Star } from 'lucide-react';
+import { BookOpen, ExternalLink, Github, Star } from 'lucide-react';
 
 export const ExtraSections: React.FC = () => {
   const portfolioUrl = typeof window !== 'undefined' ? window.location.href : '/';
@@ -10,7 +10,7 @@ export const ExtraSections: React.FC = () => {
       {/* Research Work Section */}
       <section id="research">
         <SectionHeader
-          title="Research Work"
+          title="Research Projects"
           subtitle="Selected academic contributions and research-focused projects"
           icon={<BookOpen className="text-blue-500" />}
         />
@@ -50,10 +50,6 @@ export const ExtraSections: React.FC = () => {
           </motion.div>
 
           <div className="pt-4">
-            <div className="flex items-center gap-3 mb-6">
-              <Microscope className="text-blue-400" />
-              <h3 className="text-xl md:text-2xl font-bold text-white">Research Projects</h3>
-            </div>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}

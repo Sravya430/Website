@@ -3,6 +3,17 @@ import { motion } from 'framer-motion';
 import data from '../data.json';
 
 export const SkillUniverse: React.FC = () => {
+  const getBadgeStyles = (level: string) => {
+    switch (level) {
+      case 'Advanced':
+        return 'bg-emerald-500/10 text-emerald-400';
+      case 'Beginner':
+        return 'bg-slate-500/10 text-slate-400';
+      default:
+        return 'bg-blue-500/10 text-blue-400';
+    }
+  };
+
   return (
     <div className="py-12">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -37,12 +48,8 @@ export const SkillUniverse: React.FC = () => {
                   </div>
 
                   {/* Inline badge for mobile/glance */}
-                  <div className={`mt-1.5 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider text-center ${
-                    skill.level === 'Good Knowledge' 
-                      ? 'bg-green-500/10 text-green-400' 
-                      : 'bg-blue-500/10 text-blue-400'
-                  }`}>
-                    {skill.level === 'Good Knowledge' ? 'Good' : 'Basic'}
+                  <div className={`mt-1.5 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider text-center ${getBadgeStyles(skill.level)}`}>
+                    {skill.level}
                   </div>
                 </div>
               ))}
