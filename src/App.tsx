@@ -12,6 +12,9 @@ import { Github, Linkedin, Mail, Cpu, BarChart3, Globe, Zap, Code, Activity, Use
 import CountUp from 'react-countup';
 import data from './data.json';
 
+const githubUsername = data.personal.github.split('/').filter(Boolean).pop() ?? 'Sravya430';
+const showGitHubSection = false;
+
 interface GitHubProfile {
   public_repos: number;
   followers: number;
@@ -27,10 +30,10 @@ interface GitHubRepo {
 }
 
 interface GitHubStats {
-  publicRepos: number;
-  followers: number;
-  following: number;
-  totalStars: number;
+  publicRepos: string | number;
+  followers: string | number;
+  following: string | number;
+  totalStars: string | number;
   topLanguage: string;
 }
 
@@ -74,10 +77,10 @@ function App() {
   useSmoothScroll();
   const { scrollYProgress } = useScroll();
   const [githubStats, setGithubStats] = useState<GitHubStats>({
-    publicRepos: 0,
-    followers: 0,
-    following: 0,
-    totalStars: 0,
+    publicRepos: '—',
+    followers: '—',
+    following: '—',
+    totalStars: '—',
     topLanguage: '—',
   });
   const [isLoading, setIsLoading] = useState(true);
@@ -88,13 +91,27 @@ function App() {
   });
 
   useEffect(() => {
+    if (!showGitHubSection) {
+      return;
+    }
+
     const controller = new AbortController();
 
     const fetchGitHubStats = async () => {
+      setIsLoading(true);
+
       try {
         const [profileResponse, reposResponse] = await Promise.all([
-          fetch('https://api.github.com/users/Sravya430', { signal: controller.signal }),
-          fetch('https://api.github.com/users/Sravya430/repos?per_page=100', { signal: controller.signal }),
+          fetch(`https://api.github.com/users/${githubUsername}`, {
+            signal: controller.signal,
+            cache: 'no-store',
+            headers: { Accept: 'application/vnd.github+json' },
+          }),
+          fetch(`https://api.github.com/users/${githubUsername}/repos?per_page=100`, {
+            signal: controller.signal,
+            cache: 'no-store',
+            headers: { Accept: 'application/vnd.github+json' },
+          }),
         ]);
 
         if (!profileResponse.ok || !reposResponse.ok) {
@@ -129,7 +146,7 @@ function App() {
     fetchGitHubStats();
 
     return () => controller.abort();
-  }, []);
+  }, [githubUsername]);
 
   return (
     <div className="bg-slate-950 text-slate-200 min-h-screen selection:bg-blue-500/30 selection:text-blue-200">
@@ -194,38 +211,54 @@ function App() {
           <SkillUniverse />
         </section>
 
-        {/* GitHub Activity Section */}
-        <section id="github">
-          <SectionHeader title="GitHub Activity" subtitle="Live statistics from GitHub" />
-          <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-8 mt-12">
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="bg-slate-900 border border-slate-800 rounded-2xl p-6 overflow-hidden relative"
-            >
-              <div className="flex justify-between items-center mb-6">
-                <div className="flex items-center gap-2">
-                  <Activity className="text-green-500" size={20} />
-                  <h4 className="font-bold text-white">Contribution Overview</h4>
+        {/* GitHub Activity Section - disabled via feature flag */}
+        {showGitHubSection && (
+          <section id="github">
+            <SectionHeader title="GitHub Activity" subtitle="Live statistics from GitHub" />
+            <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-8 mt-12">
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="bg-slate-900 border border-slate-800 rounded-2xl p-6 overflow-hidden relative"
+              >
+                <div className="flex justify-between items-center mb-6">
+                  <div className="flex items-center gap-2">
+                    <Activity className="text-green-500" size={20} />
+                    <h4 className="font-bold text-white">Contribution Overview</h4>
+                  </div>
+                  <span className="text-xs text-slate-500 font-mono">Live from GitHub</span>
                 </div>
-                <span className="text-xs text-slate-500 font-mono">Live from GitHub</span>
-              </div>
+                <div className="space-y-4">
+                  <GitHubStatsImageCard
+                    src={`https://github-readme-stats.vercel.app/api?username=${githubUsername}&show_icons=true&theme=dark&hide_border=true&bg_color=020617&cache_seconds=1800`}
+                    alt={`${githubUsername} GitHub statistics`}
+                    title="Overall GitHub Statistics"
+                    fallbackLabel="GitHub statistics are temporarily unavailable."
+                  />
+                  <GitHubStatsImageCard
+                    src={`https://github-readme-stats.vercel.app/api/top-langs/?username=${githubUsername}&theme=dark&hide_border=true&layout=compact&cache_seconds=1800`}
+                    alt={`${githubUsername} most used languages`}
+                    title="Most Used Languages"
+                    fallbackLabel="Language breakdown is temporarily unavailable."
+                  />
+                  <GitHubContributionGraphCard username={githubUsername} />
+                  <GitHubStatsImageCard
+                    src={`https://github-readme-streak-stats.herokuapp.com/?user=${githubUsername}&theme=dark&hide_border=true&background=020617&cache_seconds=1800`}
+                    alt={`${githubUsername} GitHub contribution streak`}
+                    title="Contribution Streak"
+                    fallbackLabel="Contribution streak is temporarily unavailable."
+                  />
+                </div>
+              </motion.div>
               <div className="space-y-4">
-                <img
-                  src={`https://github-readme-streak-stats.herokuapp.com/?user=Sravya430&theme=dark&hide_border=true&background=020617`}
-                  alt="GitHub contribution streak for Sravya430"
-                  className="w-full rounded-xl border border-slate-800"
-                />
+                <GithubStatCard icon={<Code size={18} />} label="Top Language" value={isLoading ? '—' : githubStats.topLanguage} />
+                <GithubStatCard icon={<GitBranch size={18} />} label="Public Repositories" value={isLoading ? '—' : githubStats.publicRepos} />
+                <GithubStatCard icon={<Star size={18} />} label="Total Stars Earned" value={isLoading ? '—' : githubStats.totalStars} />
+                <GithubStatCard icon={<Users size={18} />} label="Followers" value={isLoading ? '—' : githubStats.followers} />
+                <GithubStatCard icon={<Users size={18} />} label="Following" value={isLoading ? '—' : githubStats.following} />
               </div>
-            </motion.div>
-            <div className="space-y-4">
-              <GithubStatCard icon={<Code size={18} />} label="Top Language" value={isLoading ? '—' : githubStats.topLanguage} />
-              <GithubStatCard icon={<GitBranch size={18} />} label="Public Repositories" value={isLoading ? '—' : githubStats.publicRepos} />
-              <GithubStatCard icon={<Star size={18} />} label="Total Stars Earned" value={isLoading ? '—' : githubStats.totalStars} />
-              <GithubStatCard icon={<Users size={18} />} label="Followers" value={isLoading ? '—' : githubStats.followers} />
-              <GithubStatCard icon={<Users size={18} />} label="Following" value={isLoading ? '—' : githubStats.following} />
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* Experience & Education */}
         <section id="experience">
@@ -288,6 +321,55 @@ const GithubStatCard = ({ icon, label, value }: GithubStatCardProps) => (
      <span className="font-bold text-white">{value}</span>
   </motion.div>
 );
+
+const GitHubContributionGraphCard = ({ username }: { username: string }) => {
+  const [attempt, setAttempt] = useState(0);
+  const primarySrc = `https://ghchart.rshah.org/${username}`;
+  const fallbackSrc = `https://github-readme-activity-graph.vercel.app/graph?username=${username}&theme=react-dark`;
+  const displaySrc = attempt === 0 ? primarySrc : fallbackSrc;
+  const exhausted = attempt >= 2;
+
+  return (
+    <div className="rounded-xl border border-slate-800 overflow-hidden bg-slate-950/70">
+      <div className="px-4 py-3 text-sm font-medium text-slate-400 border-b border-slate-800">Contribution Calendar</div>
+      {exhausted ? (
+        <div className="p-6 text-sm text-slate-400 text-center">
+          Live contribution data is unavailable right now, but the GitHub statistics above are still visible.
+        </div>
+      ) : (
+        <img
+          src={displaySrc}
+          alt={`${username} contribution calendar`}
+          className="w-full"
+          loading="lazy"
+          onError={() => setAttempt((current) => current + 1)}
+        />
+      )}
+    </div>
+  );
+};
+
+const GitHubStatsImageCard = ({ src, alt, title, fallbackLabel }: { src: string; alt: string; title: string; fallbackLabel: string }) => {
+  const [hasError, setHasError] = useState(false);
+  const imageSrc = `${src}${src.includes('?') ? '&' : '?'}cache_seconds=1800&_=${Date.now()}`;
+
+  return (
+    <div className="rounded-xl border border-slate-800 overflow-hidden bg-slate-950/70">
+      <div className="px-4 py-3 text-sm font-medium text-slate-400 border-b border-slate-800">{title}</div>
+      {hasError ? (
+        <div className="p-4 text-sm text-slate-400">{fallbackLabel}</div>
+      ) : (
+        <img
+          src={imageSrc}
+          alt={alt}
+          className="w-full"
+          loading="lazy"
+          onError={() => setHasError(true)}
+        />
+      )}
+    </div>
+  );
+};
 
 const SectionHeader = ({ title, subtitle, center = false }: SectionHeaderProps) => (
   <div className={center ? 'text-center' : ''}>
