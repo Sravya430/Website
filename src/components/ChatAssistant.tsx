@@ -1,123 +1,137 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, Send, X, Bot, User } from 'lucide-react';
-import data from '../data.json';
+import { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { ArrowUp, BookOpen, ExternalLink, MessageSquare, RotateCcw, Sparkles, X } from 'lucide-react';
+import { respond, starterQuestions } from './chatKnowledge';
+import type { Answer } from './chatKnowledge';
 
-interface Message {
-  id: string;
-  text: string;
-  sender: 'user' | 'ai';
-}
+interface Exchange { id: number; question: string; answer: Answer }
+const MAX_LENGTH = 1000;
+const MAX_HISTORY = 30;
 
-export const ChatAssistant: React.FC = () => {
+export const ChatAssistant = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    { id: '1', text: "Hi! I'm Sravya's AI assistant. Ask me anything about her experience, projects, or skills!", sender: 'ai' }
-  ]);
-  const [inputValue, setInputValue] = useState('');
+  const [exchanges, setExchanges] = useState<Exchange[]>([]);
+  const [input, setInput] = useState('');
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  const latestRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const nextId = useRef(0);
+  const reducedMotion = useReducedMotion();
+  const last = exchanges.at(-1);
+  const suggestions = last?.answer.suggestions ?? starterQuestions;
 
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    if (isOpen) inputRef.current?.focus({ preventScroll: true });
+  }, [isOpen]);
+
+  useEffect(() => {
+    const container = scrollRef.current;
+    const latest = latestRef.current;
+    if (isOpen && exchanges.length && container && latest) {
+      container.scrollTo({ top: container.scrollTop + latest.getBoundingClientRect().top - container.getBoundingClientRect().top - 16, behavior: reducedMotion ? 'instant' : 'smooth' });
     }
-  }, [messages]);
+  }, [exchanges, isOpen, reducedMotion]);
 
-  const handleSend = () => {
-    if (!inputValue.trim()) return;
+  const close = () => {
+    setIsOpen(false);
+    launcherRef.current?.focus({ preventScroll: true });
+  };
 
-    const userMsg: Message = { id: Date.now().toString(), text: inputValue, sender: 'user' };
-    setMessages(prev => [...prev, userMsg]);
-    setInputValue('');
-
-    // Simulate AI response based on data.json
-    setTimeout(() => {
-      const query = inputValue.toLowerCase();
-      let response = "I'm not sure about that. Try asking about her RAG project, RL research, or skills!";
-
-      if (query.includes('rag') || query.includes('mcq')) {
-        response = data.projects[1].description + " " + data.projects[1].details.join(' ');
-      } else if (query.includes('rl') || query.includes('tracker') || query.includes('pytorch')) {
-        response = data.projects[0].description + " " + data.projects[0].details.join(' ');
-      } else if (query.includes('skill') || query.includes('tech') || query.includes('language')) {
-        const skillsList = data.skills_v2.flatMap(cat => cat.items.map(s => s.name)).join(', ');
-        response = `Her core skills include: ${skillsList}.`;
-      } else if (query.includes('experience') || query.includes('intern')) {
-        response = `Sravya was an ${data.experience[0].role} at National Finance Olympiad. ${data.experience[0].highlights.join(' ')}`;
-      } else if (query.includes('education') || query.includes('college') || query.includes('bits')) {
-        response = `She is a Computer Science undergraduate at BITS Pilani (CGPA: 5.62).`;
-      } else if (query.includes('contact') || query.includes('email')) {
-        response = `You can reach her at ${data.personal.email} or via LinkedIn: ${data.personal.linkedin}`;
-      }
-
-      const aiMsg: Message = { id: (Date.now() + 1).toString(), text: response, sender: 'ai' };
-      setMessages(prev => [...prev, aiMsg]);
-    }, 600);
+  const send = (value: string) => {
+    const question = value.trim().slice(0, MAX_LENGTH);
+    if (!question) return;
+    const id = ++nextId.current;
+    setExchanges(previous => [...previous, { id, question, answer: respond(question, previous.at(-1)?.answer.topics) }].slice(-MAX_HISTORY));
+    setInput('');
+    inputRef.current?.focus({ preventScroll: true });
   };
 
   return (
     <>
       <button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 p-4 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all z-50 group"
+        ref={launcherRef}
+        type="button"
+        onClick={() => isOpen ? close() : setIsOpen(true)}
+        aria-label={isOpen ? 'Close portfolio assistant' : 'Ask about Sravya'}
+        aria-expanded={isOpen}
+        aria-controls="portfolio-assistant"
+        className="fixed bottom-6 right-6 z-50 rounded-full bg-blue-600 p-4 text-white shadow-lg hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-300"
       >
-        <MessageSquare className="group-hover:scale-110 transition-transform" />
-        <span className="absolute right-full mr-4 top-1/2 -translate-y-1/2 bg-slate-900 text-white text-xs px-2 py-1 rounded border border-slate-800 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-          Ask Sravya AI
-        </span>
+        {isOpen ? <X aria-hidden="true" /> : <MessageSquare aria-hidden="true" />}
       </button>
-
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-24 right-6 w-[350px] md:w-[400px] h-[500px] bg-slate-950 border border-slate-800 rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden"
+          <motion.section
+            id="portfolio-assistant"
+            role="dialog"
+            aria-modal="false"
+            aria-labelledby="assistant-title"
+            initial={reducedMotion ? false : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: reducedMotion ? 0 : 12 }}
+            transition={{ duration: 0.16 }}
+            onKeyDown={event => { if (event.key === 'Escape') { event.stopPropagation(); close(); } }}
+            className="fixed bottom-24 left-3 right-3 z-50 flex h-[min(38rem,calc(100dvh-7rem))] flex-col overflow-hidden rounded-2xl border border-slate-700 bg-slate-950 text-slate-200 shadow-2xl sm:left-auto sm:right-6 sm:w-[420px]"
           >
-            <div className="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
-              <div className="flex items-center gap-2">
-                <Bot className="text-blue-500" size={20} />
-                <span className="font-bold text-white text-sm">Sravya AI Assistant</span>
+            <header className="flex shrink-0 items-center gap-3 border-b border-slate-800 bg-slate-900 px-4 py-3">
+              <div className="rounded-xl bg-blue-500/15 p-2 text-blue-300"><Sparkles size={19} aria-hidden="true" /></div>
+              <div className="min-w-0 flex-1">
+                <h2 id="assistant-title" className="text-sm font-semibold text-white">Sravya’s portfolio assistant</h2>
+                <p className="mt-0.5 text-xs text-slate-400">Explore the work. Follow the sources.</p>
               </div>
-              <button onClick={() => setIsOpen(false)} className="text-slate-400 hover:text-white">
-                <X size={20} />
-              </button>
-            </div>
+              <button type="button" aria-label="Start a new conversation" title="Start a new conversation" disabled={!exchanges.length}
+                onClick={() => { setExchanges([]); setInput(''); inputRef.current?.focus(); }}
+                className="rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-white focus-visible:outline-2 focus-visible:outline-blue-400 disabled:opacity-30"><RotateCcw size={17} aria-hidden="true" /></button>
+              <button type="button" aria-label="Close assistant" onClick={close} className="rounded-lg p-2 text-slate-400 hover:bg-slate-800 hover:text-white focus-visible:outline-2 focus-visible:outline-blue-400"><X size={19} aria-hidden="true" /></button>
+            </header>
 
-            <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-950/50">
-              {messages.map((msg) => (
-                <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`flex gap-2 max-w-[85%] ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}>
-                    <div className={`mt-1 p-1 rounded-full ${msg.sender === 'user' ? 'bg-slate-800' : 'bg-blue-600/20'}`}>
-                      {msg.sender === 'user' ? <User size={12} className="text-slate-400" /> : <Bot size={12} className="text-blue-400" />}
-                    </div>
-                    <div className={`p-3 rounded-2xl text-sm ${
-                      msg.sender === 'user' 
-                        ? 'bg-blue-600 text-white rounded-tr-none' 
-                        : 'bg-slate-900 text-slate-300 rounded-tl-none border border-slate-800'
-                    }`}>
-                      {msg.text}
+            <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4" data-lenis-prevent>
+              <div className="mb-5 rounded-xl border border-blue-500/20 bg-blue-500/5 p-4">
+                <p className="text-sm font-medium text-white">Get to know Sravya’s work</p>
+                <p className="mt-2 text-sm leading-relaxed text-slate-400">Ask about her projects, DiSCo research, experience, or skills. Answers use published portfolio details, with links to explore further.</p>
+              </div>
+              <div role="log" aria-label="Conversation" aria-live="polite" aria-relevant="additions" className="space-y-6">
+                {exchanges.map((exchange, index) => (
+                  <div key={exchange.id} ref={index === exchanges.length - 1 ? latestRef : undefined} className="scroll-mt-4 space-y-3">
+                    <div className="ml-8 flex justify-end"><p className="max-w-full whitespace-pre-wrap break-words rounded-2xl rounded-tr-sm bg-blue-600 px-4 py-3 text-sm text-white"><span className="sr-only">You: </span>{exchange.question}</p></div>
+                    <div className="rounded-2xl rounded-tl-sm border border-slate-800 bg-slate-900/70 p-4">
+                      <p className="whitespace-pre-wrap break-words text-sm leading-relaxed text-slate-300"><span className="sr-only">Assistant: </span>{exchange.answer.text}</p>
+                      {exchange.answer.sources.length > 0 && (
+                        <nav aria-label={`Sources for answer ${index + 1}`} className="mt-4 flex flex-wrap gap-2 border-t border-slate-800 pt-3">
+                          {exchange.answer.sources.map(source => (
+                            <a key={source.href} href={source.href} target={source.href.startsWith('https:') ? '_blank' : undefined} rel={source.href.startsWith('https:') ? 'noopener noreferrer' : undefined}
+                              onClick={() => { if (source.href.startsWith('#')) close(); }}
+                              className="inline-flex max-w-full items-center gap-1.5 rounded-lg border border-blue-500/20 bg-blue-500/10 px-2.5 py-2 text-xs font-medium text-blue-300 hover:bg-blue-500/20 focus-visible:outline-2 focus-visible:outline-blue-400">
+                              <BookOpen size={12} className="shrink-0" aria-hidden="true" />{source.label}{source.href.startsWith('https:') && <ExternalLink size={11} className="shrink-0" aria-hidden="true" />}
+                            </a>
+                          ))}
+                        </nav>
+                      )}
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+              <div className="mt-5 flex flex-wrap gap-2" aria-label="Suggested questions">
+                {suggestions.map(question => <button key={question} type="button" onClick={() => send(question)} className="rounded-xl border border-slate-700 px-3 py-2 text-left text-xs leading-relaxed text-slate-300 transition-colors hover:border-blue-500/50 hover:bg-blue-500/10 hover:text-white focus-visible:outline-2 focus-visible:outline-blue-400">{question}</button>)}
+              </div>
             </div>
 
-            <div className="p-4 border-t border-slate-800 bg-slate-900/50 flex gap-2">
-              <input
-                type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                placeholder="Ask me something..."
-                className="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
-              />
-              <button onClick={handleSend} className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                <Send size={18} />
-              </button>
-            </div>
-          </motion.div>
+            <form onSubmit={event => { event.preventDefault(); send(input); }} className="shrink-0 border-t border-slate-800 bg-slate-900 p-3">
+              <label htmlFor="assistant-question" className="sr-only">Your question about Sravya</label>
+              <div className="flex items-end gap-2 rounded-xl border border-slate-700 bg-slate-950 p-2 focus-within:border-blue-500">
+                <textarea id="assistant-question" ref={inputRef} value={input} rows={2} maxLength={MAX_LENGTH} onChange={event => setInput(event.target.value)}
+                  onKeyDown={event => {
+                    if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) { event.preventDefault(); send(input); }
+                  }}
+                  placeholder="Ask about a project, skill, or experience…"
+                  className="min-w-0 flex-1 resize-none bg-transparent px-1 py-1 text-base leading-5 text-white placeholder:text-slate-500 focus:outline-none sm:text-sm"
+                  aria-describedby="assistant-input-help" />
+                <button type="submit" aria-label="Send question" disabled={!input.trim()} className="shrink-0 rounded-lg bg-blue-600 p-2.5 text-white hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-300 disabled:cursor-not-allowed disabled:opacity-35"><ArrowUp size={18} aria-hidden="true" /></button>
+              </div>
+              <p id="assistant-input-help" className="mt-2 flex justify-between gap-2 px-1 text-[10px] text-slate-400"><span>Enter to send · Shift+Enter for a new line</span><span>{input.length}/{MAX_LENGTH}</span></p>
+            </form>
+          </motion.section>
         )}
       </AnimatePresence>
     </>
