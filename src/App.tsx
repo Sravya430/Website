@@ -146,7 +146,7 @@ function App() {
     fetchGitHubStats();
 
     return () => controller.abort();
-  }, [githubUsername]);
+  }, []);
 
   return (
     <div className="bg-slate-950 text-slate-200 min-h-screen selection:bg-blue-500/30 selection:text-blue-200">
@@ -173,8 +173,8 @@ function App() {
               icon={<Zap className="text-yellow-500" />} 
               value={70} 
               suffix="%"
-              label="Automation" 
-              description="Reduction in manual effort"
+              label="Question Automation"
+              description="Approx. share of question creation"
             />
             <MetricCard 
               icon={<BarChart3 className="text-purple-500" />} 
@@ -184,10 +184,9 @@ function App() {
             />
             <MetricCard 
               icon={<Globe className="text-green-500" />} 
-              value={15} 
-              suffix="%"
-              label="Data Analysed" 
-              description="Active user base trends"
+              value={12}
+              label="Cultures Studied"
+              description="DiSCo preprint · 6 LLMs"
             />
           </div>
         </section>
@@ -351,7 +350,8 @@ const GitHubContributionGraphCard = ({ username }: { username: string }) => {
 
 const GitHubStatsImageCard = ({ src, alt, title, fallbackLabel }: { src: string; alt: string; title: string; fallbackLabel: string }) => {
   const [hasError, setHasError] = useState(false);
-  const imageSrc = `${src}${src.includes('?') ? '&' : '?'}cache_seconds=1800&_=${Date.now()}`;
+  const [cacheKey] = useState(() => Date.now());
+  const imageSrc = `${src}${src.includes('?') ? '&' : '?'}cache_seconds=1800&_=${cacheKey}`;
 
   return (
     <div className="rounded-xl border border-slate-800 overflow-hidden bg-slate-950/70">
