@@ -29,11 +29,11 @@ export const ProjectCard: React.FC<ProjectProps> = ({ project }) => {
             <h3 className="text-2xl font-bold text-white">{project.title}</h3>
             <p className="text-blue-400 font-medium">{project.subtitle}</p>
           </div>
-          <div className="flex gap-2">
-            <a href={project.github} target="_blank" rel="noopener noreferrer" className="p-2 bg-slate-800 rounded-full text-slate-300 hover:text-white transition-colors">
+          {project.github && (
+            <a href={project.github} target="_blank" rel="noopener noreferrer" aria-label={`View ${project.title} repository on GitHub`} className="p-2 bg-slate-800 rounded-full text-slate-300 hover:text-white transition-colors">
               <Github size={20} />
             </a>
-          </div>
+          )}
         </div>
 
         <p className="text-slate-400 mb-6">{project.description}</p>

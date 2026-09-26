@@ -43,7 +43,7 @@ export const ChatAssistant: React.FC = () => {
         const skillsList = data.skills_v2.flatMap(cat => cat.items.map(s => s.name)).join(', ');
         response = `Her core skills include: ${skillsList}.`;
       } else if (query.includes('experience') || query.includes('intern')) {
-        response = `Sravya was a Software Engineering Intern (AI) at National Finance Olympiad where she ${data.experience[0].highlights[0]}`;
+        response = `Sravya was an ${data.experience[0].role} at National Finance Olympiad. ${data.experience[0].highlights.join(' ')}`;
       } else if (query.includes('education') || query.includes('college') || query.includes('bits')) {
         response = `She is a Computer Science undergraduate at BITS Pilani (CGPA: 5.62).`;
       } else if (query.includes('contact') || query.includes('email')) {

@@ -25,18 +25,18 @@ export const ExtraSections: React.FC = () => {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
               <div>
                 <h3 className="text-2xl font-bold text-white">DiSCo: Cultural Preference Bias in LLMs</h3>
-                <p className="text-blue-400 font-medium mt-2">Contributor · Under Review – ACL 2026</p>
+                <p className="text-blue-400 font-medium mt-2">Co-author · arXiv preprint · September 9, 2026</p>
               </div>
             </div>
 
             <ul className="mt-6 space-y-3 text-slate-400">
               <li className="flex gap-3">
                 <span className="text-blue-500 mt-1">•</span>
-                Contributed to research studying cultural preference bias in Large Language Models.
+                Co-authored DiSCo, a framework for studying cultural preference bias and prompt-based steering in large language models.
               </li>
               <li className="flex gap-3">
                 <span className="text-blue-500 mt-1">•</span>
-                Worked on evaluating how LLMs default to UK/US cultural options across multiple cultures even when all answers are equally valid.
+                The study evaluates six LLMs using a 304-item benchmark spanning 12 cultures, where culturally grounded answer choices are equally valid.
               </li>
               <li className="flex gap-3">
                 <span className="text-blue-500 mt-1">•</span>
@@ -47,6 +47,14 @@ export const ExtraSections: React.FC = () => {
                 Prepared research presentations summarizing findings on prompt-based steering and cultural bias in LLMs.
               </li>
             </ul>
+            <a
+              href="https://arxiv.org/abs/2609.10253"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-8 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+            >
+              Read DiSCo on arXiv <ExternalLink size={16} />
+            </a>
           </motion.div>
 
           <div className="pt-4">
@@ -119,6 +127,14 @@ export const ExtraSections: React.FC = () => {
                 Built to streamline AI workflows involving Google Drive.
               </li>
             </ul>
+            <a
+              href="https://github.com/Sravya430/MCP-Google-Drive"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-8 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-700 text-slate-200 hover:bg-slate-800 transition-colors"
+            >
+              <Github size={16} /> GitHub Repository
+            </a>
           </motion.div>
 
           <motion.div
@@ -160,7 +176,7 @@ export const ExtraSections: React.FC = () => {
                 Live Website <ExternalLink size={16} />
               </a>
               <a
-                href="https://github.com/Sravya430/Website.git"
+                href="https://github.com/Sravya430/Website"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-700 text-slate-200 hover:bg-slate-800 transition-colors"
