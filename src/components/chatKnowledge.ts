@@ -1,30 +1,14 @@
-import data from '../data.json' with { type: 'json' };
+import { profile, experience, education, skillGroups, projects, research, sources } from './portfolioContent.ts';
+import type { Source } from './portfolioContent.ts';
 
 export type Topic = 'about' | 'disco' | 'rag' | 'tracker' | 'mcp' | 'website' | 'experience' | 'education' | 'skills' | 'contact' | 'projects';
-export interface Source { label: string; href: string }
+export type { Source } from './portfolioContent.ts';
 export interface Answer {
   text: string;
   sources: Source[];
   suggestions: string[];
   topics: Topic[];
 }
-
-const sources = {
-  about: { label: 'About Sravya', href: '#' },
-  disco: { label: 'DiSCo on arXiv', href: 'https://arxiv.org/abs/2609.10253' },
-  research: { label: 'Research on this site', href: '#research' },
-  rag: { label: 'Featured projects', href: '#projects' },
-  tracker: { label: 'Featured projects', href: '#projects' },
-  mcp: { label: 'MCP source code', href: 'https://github.com/Sravya430/MCP-Google-Drive' },
-  website: { label: 'Portfolio source code', href: 'https://github.com/Sravya430/Website' },
-  experience: { label: 'Experience & education', href: '#experience' },
-  education: { label: 'Experience & education', href: '#experience' },
-  skills: { label: 'Technical skills', href: '#skills' },
-  contact: { label: 'Email Sravya', href: `mailto:${data.personal.email}` },
-  linkedin: { label: 'LinkedIn', href: data.personal.linkedin },
-  github: { label: 'GitHub profile', href: data.personal.github },
-  projects: { label: 'Projects on this site', href: '#projects' },
-};
 
 export const starterQuestions = ['What has Sravya built?', 'Tell me about DiSCo', 'Where did she work?', 'What are her skills?'];
 const suggested: Record<Topic, string[]> = {
@@ -41,20 +25,21 @@ const suggested: Record<Topic, string[]> = {
   projects: ['Tell me about DiSCo', 'Tell me about the MCP project', 'Tell me about the RAG project'],
 };
 
-const internship = data.experience[0];
-const rag = data.projects[1];
-const tracker = data.projects[0];
+const internship = experience[0];
+const rag = projects[0];
+const tracker = projects[1];
+const mcp = projects[2];
 const summaries: Record<Topic, string> = {
-  about: `${data.personal.name} is a Computer Science undergraduate at BITS Pilani. Her work includes AI backends, a production RAG system, reinforcement-learning tracking, and DiSCo research.`,
-  disco: 'Sravya co-authored DiSCo, a framework for measuring cultural preference bias and prompt-based steering in LLMs. The study evaluates six instruction-tuned LLMs on 304 items spanning 12 cultures.\n\nIt is an arXiv preprint, submitted September 9, 2026. Her documented contribution includes academic writing, paper structuring, editing, and research presentations.',
-  rag: `${rag.description}\n\n${rag.details.join('\n')}\n\nStack: ${rag.stack.join(', ')}.`,
-  tracker: `${tracker.description}\n\n${tracker.details.join('\n')}\n\nStack: ${tracker.stack.join(', ')}.`,
-  mcp: 'Sravya built an MCP (Model Context Protocol) server for Google Drive. It supports Google OAuth authentication and lets AI assistants access and manage Drive files. The project is intended to streamline AI workflows involving Google Drive.',
+  about: `${profile.name} is a Computer Science undergraduate at BITS Pilani. Her work includes AI backends, a production RAG system, reinforcement-learning tracking, and DiSCo research.`,
+  disco: `Sravya co-authored ${research.name}. ${research.description} ${research.scope}\n\nIt is an ${research.status}, submitted ${research.submitted}. Her documented contribution includes ${research.contribution[0].toLowerCase() + research.contribution.slice(1)}`,
+  rag: `${rag.summary}\n\n${rag.details.join('\n')}\n\nStack: ${rag.stack.join(', ')}.`,
+  tracker: `${tracker.summary}\n\n${tracker.details.join('\n')}\n\nStack: ${tracker.stack.join(', ')}.`,
+  mcp: `${mcp.summary} ${mcp.approach} ${mcp.details.join(' ')}`,
   website: 'Sravya built this portfolio using React, TypeScript, and Vite, with Tailwind CSS and Framer Motion. It brings together her projects, research, experience, skills, and professional links. The source code is public on GitHub.',
   experience: `Sravya was an ${internship.role} at ${internship.company} (${internship.period}), in ${internship.location}.\n\n${internship.highlights.join('\n')}`,
-  education: data.education.map(item => `${item.degree} — ${item.institution}\n${item.period}`).join('\n\n'),
-  skills: data.skills_v2.map(group => `${group.category}: ${group.items.map(item => item.name).join(', ')}.`).join('\n\n'),
-  contact: `You can email Sravya at ${data.personal.email}, connect on LinkedIn, or explore her GitHub using the links below.`,
+  education: education.map(item => `${item.degree} — ${item.institution}\n${item.period}`).join('\n\n'),
+  skills: skillGroups.map(group => `${group.category}: ${group.items.map(item => item.name).join(', ')}.`).join('\n\n'),
+  contact: `You can email Sravya at ${profile.email}, connect on LinkedIn, or explore her GitHub using the links below.`,
   projects: 'Her portfolio includes:\n\n• DiSCo — cultural preference bias and steering in LLMs; co-authored arXiv preprint.\n• Production RAG system — educational question generation.\n• Real-time multi-object tracker — A3C reinforcement learning in PyTorch.\n• MCP Google Drive server — OAuth-based Drive access for AI assistants.\n\nChoose a project to explore its work, stack, or available source code.',
 };
 
@@ -83,7 +68,7 @@ export function respond(input: string, context: Topic[] = []): Answer {
     return answer('I don’t have confirmed information to share about that. For professional enquiries, please contact Sravya directly.', [], [sources.contact, sources.linkedin]);
   }
   if (has(/\b(available|availability|hire|hiring|recruit|recruiter|job|opportunit\w*|collaborat\w*|start date|notice period|relocat\w*)\b/)) {
-    return answer('Sravya’s portfolio says she is open to collaborations and opportunities. Her current availability, start date, and preferred arrangements are not documented here; please confirm those with her directly.', ['contact'], [sources.contact, sources.linkedin]);
+    return answer('For professional enquiries, please contact Sravya. Her current availability, start date, and preferred arrangements are not documented here; please confirm those with her directly.', ['contact'], [sources.contact, sources.linkedin]);
   }
   if (has(/\b(resume|résumé|cv|certificate|certification)\b/)) {
     return answer('I don’t have a verified download link for her latest résumé or certificate records here. Please use LinkedIn or email Sravya for the current version.', ['contact'], [sources.linkedin, sources.contact]);
@@ -92,16 +77,16 @@ export function respond(input: string, context: Topic[] = []): Answer {
     return answer(summaries.contact, ['contact'], [sources.contact, sources.linkedin, sources.github]);
   }
   if (has(/\b(location|based|live|lives|living)\b/) && explicit.length === 0) {
-    return answer(`Her portfolio lists ${data.personal.location}. For her current work location or arrangements, please confirm directly with Sravya.`, ['contact'], [sources.contact]);
+    return answer(`Her portfolio lists ${profile.location}. For her current work location or arrangements, please confirm directly with Sravya.`, ['contact'], [sources.contact]);
   }
   if (has(/\b(15\s*%|15 percent|time saved|time reduction|manual effort|70 percent)\b/) || q.includes('15%') || q.includes('70%')) {
-    return answer('The documented metric is approximately 70% of question creation automated, with 1,000+ MCQs generated. It does not establish a 70% reduction in time. The portfolio does not retain a verified 15% outcome claim.', ['rag'], [sources.experience, sources.rag]);
+    return answer(`${rag.outcome} It does not establish a 70% reduction in time. The portfolio does not retain a verified 15% outcome claim.`, ['rag'], [sources.experience, sources.rag]);
   }
 
   const wantsLink = has(/\b(link|url|repo|repository|github|source|code|public|download|read)\b/);
   const wantsStack = has(/\b(stack|technologies|tools|frameworks|built with|tech used)\b/);
   const wantsSkills = has(/\b(skill|skills|proficien\w*|expertise|languages|strongest|good at|know|knows)\b/);
-  const skills = data.skills_v2.flatMap(group => group.items);
+  const skills = skillGroups.flatMap(group => group.items);
   const matchedSkills = skills.filter(skill => {
     const name = normalize(skill.name.replace(/ \(.*\)/, ''));
     const aliases = name === 'dbms' ? ['dbms', 'sql', 'databases'] : name === 'dsa' ? ['dsa', 'data structures', 'algorithms'] : name === 'rest apis' ? ['rest apis', 'rest api'] : [name];
@@ -120,13 +105,13 @@ export function respond(input: string, context: Topic[] = []): Answer {
       return answer('I don’t see that skill documented in the portfolio, so I can’t confirm her experience with it. Her listed skills are available below.', ['skills'], [sources.skills]);
     }
     if (has(/\b(programming|coding|language|languages)\b/)) {
-      return answer(`Listed programming languages: ${data.skills_v2[0].items.map(item => `${item.name} (${item.level.toLowerCase()})`).join(', ')}. These are self-described levels.`, ['skills'], [sources.skills]);
+      return answer(`Listed programming languages: ${skillGroups[0].items.map(item => `${item.name} (${item.level.toLowerCase()})`).join(', ')}. These are self-described levels.`, ['skills'], [sources.skills]);
     }
     return answer(summaries.skills, ['skills'], [sources.skills]);
   }
 
   if (has(/\b(education|college|university|bits|degree|study|studies|studying|school|cgpa|gpa|grade|grades|graduat\w*)\b/) && explicit.length === 0) {
-    if (has(/\b(cgpa|gpa|grade|grades)\b/)) return answer(data.education.map(item => `${item.institution}: ${item.details}`).join('\n'), ['education'], [sources.education]);
+    if (has(/\b(cgpa|gpa|grade|grades)\b/)) return answer(education.map(item => `${item.institution}: ${item.details}`).join('\n'), ['education'], [sources.education]);
     if (has(/\b(graduat\w*)\b/)) return answer('Sravya’s B.E. Computer Science studies at BITS Pilani are listed as August 2023–present. The portfolio data does not specify a graduation date; confirm her expected completion date with her.', ['education'], [sources.education, sources.contact]);
     return answer(summaries.education, ['education'], [sources.education]);
   }
@@ -150,17 +135,17 @@ export function respond(input: string, context: Topic[] = []): Answer {
     for (const topic of topics) {
       links.push(sources[topic]);
       if (topic === 'disco') {
-        if (has(/\b(accepted|acl|peer reviewed|status|published)\b/)) parts.push('DiSCo is an arXiv preprint submitted September 9, 2026. The linked record does not establish acceptance at ACL or another peer-reviewed venue, so I can’t claim conference acceptance.');
-        else if (has(/\b(contribution|contribute\w*|role|personally|herself|her part)\b/)) parts.push('Sravya is a co-author. Her documented work includes academic writing, paper structuring, editing across drafts, and research presentations. The portfolio does not attribute all experiments or implementation solely to her.');
-        else if (has(/\b(authors|coauthors|who wrote)\b/)) parts.push('DiSCo’s authors are Bhuvan Arora, Devesh Saraogi, Sravya Varada, and Dhruv Kumar.');
-        else if (wantsStack) parts.push('The paper reports six instruction-tuned LLMs, 304 benchmark items, and 12 cultures. The portfolio does not list the implementation stack or individual model names; consult the paper for those details.');
-        else if (wantsLink) parts.push('Read “DiSCo: A Distribution-First Steering and Cultural Prior Evaluation Framework for Measuring Cultural Preference Bias in LLMs” using the arXiv link below. A separate public code repository is not linked in this portfolio.');
+        if (has(/\b(accepted|acl|peer reviewed|status|published)\b/)) parts.push(`${research.name} is an ${research.status} submitted ${research.submitted}. ${research.acceptanceNote}`);
+        else if (has(/\b(contribution|contribute\w*|role|personally|herself|her part)\b/)) parts.push(`Sravya is a ${research.role.toLowerCase()}. Her documented work includes ${research.contribution[0].toLowerCase() + research.contribution.slice(1)} The portfolio does not attribute all experiments or implementation solely to her.`);
+        else if (has(/\b(authors|coauthors|who wrote)\b/)) parts.push(`${research.name}’s authors are ${research.authors.slice(0, -1).join(', ')}, and ${research.authors.at(-1)}.`);
+        else if (wantsStack) parts.push(`${research.scope} The portfolio does not list the implementation stack or individual model names; consult the paper for those details.`);
+        else if (wantsLink) parts.push(`Read “${research.title}” using the arXiv link below. A separate public code repository is not linked in this portfolio.`);
         else parts.push(summaries.disco);
       } else if (topic === 'rag' || topic === 'tracker') {
         const project = topic === 'rag' ? rag : tracker;
         if (wantsLink) parts.push(`A public source-code repository for the ${project.title} is not linked in this portfolio. You can review the project description below or ask Sravya about access.`);
         else if (wantsStack) parts.push(`${project.title} uses ${project.stack.join(', ')}.`);
-        else if (has(/\b(results|metrics|accuracy|performance|benchmark|speed|latency)\b/)) parts.push(topic === 'rag' ? 'Documented results: 1,000+ MCQs generated and approximately 70% of question creation automated. No measured latency, accuracy, or time-saving percentage is published here.' : 'The portfolio describes stable convergence across two parallel workers using a custom MOT17Env. It does not publish quantitative tracking accuracy, FPS, or comparative benchmark scores.');
+        else if (has(/\b(results|metrics|accuracy|performance|benchmark|speed|latency)\b/)) parts.push(topic === 'rag' ? `${rag.outcome} No measured latency, accuracy, or time-saving percentage is published here.` : `${tracker.outcome} It does not publish quantitative tracking accuracy, FPS, or comparative benchmark scores.`);
         else parts.push(summaries[topic]);
       } else if (topic === 'mcp') {
         parts.push(wantsStack ? 'The documented interface is Model Context Protocol with Google OAuth authentication. The portfolio does not list a complete language or dependency stack; the repository contains the implementation.' : has(/\b(authentication|oauth|secure|security)\b/) ? 'The MCP Google Drive server uses Google OAuth for authentication. The portfolio does not document exact scopes, token storage, or security audit results; consult the repository for implementation details.' : summaries.mcp);
