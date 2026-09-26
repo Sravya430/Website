@@ -55,7 +55,7 @@ const summaries: Record<Topic, string> = {
   education: data.education.map(item => `${item.degree} — ${item.institution}\n${item.period}`).join('\n\n'),
   skills: data.skills_v2.map(group => `${group.category}: ${group.items.map(item => item.name).join(', ')}.`).join('\n\n'),
   contact: `You can email Sravya at ${data.personal.email}, connect on LinkedIn, or explore her GitHub using the links below.`,
-  projects: 'Her portfolio includes:\n\n• DiSCo — cultural preference bias and steering in LLMs; co-authored arXiv preprint.\n• Production RAG system — educational question generation.\n• Real-time multi-object tracker — A3C reinforcement learning in PyTorch.\n• MCP Google Drive server — OAuth-based Drive access for AI assistants.\n• This portfolio — React, TypeScript, and Vite.\n\nChoose a project to explore its work, stack, or available source code.',
+  projects: 'Her portfolio includes:\n\n• DiSCo — cultural preference bias and steering in LLMs; co-authored arXiv preprint.\n• Production RAG system — educational question generation.\n• Real-time multi-object tracker — A3C reinforcement learning in PyTorch.\n• MCP Google Drive server — OAuth-based Drive access for AI assistants.\n\nChoose a project to explore its work, stack, or available source code.',
 };
 
 function normalize(value: string): string {

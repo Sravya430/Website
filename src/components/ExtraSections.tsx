@@ -3,8 +3,6 @@ import { motion } from 'framer-motion';
 import { BookOpen, ExternalLink, Github, Star } from 'lucide-react';
 
 export const ExtraSections: React.FC = () => {
-  const portfolioUrl = typeof window !== 'undefined' ? window.location.href : '/';
-
   return (
     <div className="space-y-32">
       {/* Research Work Section */}
@@ -98,11 +96,11 @@ export const ExtraSections: React.FC = () => {
       <section id="personal-projects">
         <SectionHeader
           title="Projects of Personal Interest"
-          subtitle="Selected side projects and portfolio work"
+          subtitle="Selected side projects"
           icon={<Star className="text-yellow-500" />}
         />
 
-        <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="mt-12 space-y-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -137,54 +135,6 @@ export const ExtraSections: React.FC = () => {
             </a>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="p-8 bg-slate-900/60 border border-slate-800 rounded-3xl"
-          >
-            <h3 className="text-2xl font-bold text-white">Personal Portfolio Website</h3>
-            <p className="text-slate-400 mt-4">
-              Designed and developed my personal portfolio website to showcase my projects, research, experience, technical skills, and professional journey.
-            </p>
-            <ul className="mt-6 space-y-3 text-slate-400">
-              <li className="flex gap-3">
-                <span className="text-blue-500 mt-1">•</span>
-                Built using React, TypeScript, and Vite.
-              </li>
-              <li className="flex gap-3">
-                <span className="text-blue-500 mt-1">•</span>
-                Features a modern, responsive, and accessible user interface.
-              </li>
-              <li className="flex gap-3">
-                <span className="text-blue-500 mt-1">•</span>
-                Serves as a central hub for my GitHub, LinkedIn, resume, and other professional profiles.
-              </li>
-              <li className="flex gap-3">
-                <span className="text-blue-500 mt-1">•</span>
-                Continuously maintained with ongoing feature additions, design improvements, and content updates.
-              </li>
-            </ul>
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href={portfolioUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors"
-              >
-                Live Website <ExternalLink size={16} />
-              </a>
-              <a
-                href="https://github.com/Sravya430/Website"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-700 text-slate-200 hover:bg-slate-800 transition-colors"
-              >
-                <Github size={16} /> GitHub Repository
-              </a>
-            </div>
-          </motion.div>
         </div>
       </section>
     </div>
