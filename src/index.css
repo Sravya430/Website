@@ -246,3 +246,12 @@ details>summary::-webkit-details-marker { display: none; }
   .project-tracker .project-evidence { grid-column: 1; grid-row: 1; }
   .project-tracker .project-copy { grid-column: 2; grid-row: 1; }
 }
+
+/* Let narrow grid children shrink instead of clipping inside the paper cards. */
+.project-main > *, .project-detail-grid > *, .rag-pipeline li { min-width: 0; }
+.project-metrics { flex-wrap: wrap; }
+.project-metrics > div { flex: 1 1 80px; min-width: 0; }
+@media (max-width: 370px) {
+  .project-metrics { gap: 12px; }
+  .project-metrics strong { font-size: 28px; }
+}
