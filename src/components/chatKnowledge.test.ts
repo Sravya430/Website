@@ -3,6 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { respond, starterQuestions } from './chatKnowledge.ts';
 import type { Topic } from './chatKnowledge.ts';
+import { research, projects, sources } from './portfolioContent.ts';
 
 const cases: Array<[string, RegExp, Topic[]?]> = [
   ['Where did she work?', /National Finance Olympiad/],
@@ -75,4 +76,20 @@ test('irrelevant questions reset context instead of reusing a previous answer', 
 });
 test('new explicit topic replaces prior context', () => {
   assert.deepEqual(respond('Tell me about MCP', ['disco']).topics, ['mcp']);
+});
+
+
+test('research answers use the same facts as the page', () => {
+  const answer = respond('Tell me about DiSCo').text;
+  assert.ok(answer.includes(research.scope));
+  assert.ok(answer.includes(research.status));
+  assert.ok(answer.includes(research.submitted));
+  assert.ok(respond('Link the paper').text.includes(research.title));
+});
+test('project outcomes and source anchors come from shared content', () => {
+  for (const project of projects.filter(project => project.id !== 'mcp')) {
+    assert.ok(respond('What results are documented?', [project.id]).text.includes(project.outcome));
+    assert.equal(respond(project.id).sources[0].href, sources[project.id].href);
+  }
+  assert.doesNotMatch(respond('tracker').text, /0\.84/);
 });
