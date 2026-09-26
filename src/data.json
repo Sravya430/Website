@@ -18,20 +18,19 @@
   "experience": [
     {
       "company": "National Finance Olympiad",
-      "role": "Software Engineering Intern (AI)",
+      "role": "AI Engineering Intern",
       "location": "Bengaluru, India",
       "period": "May 2025 – Sep 2025",
       "highlights": [
-        "Built a RAG pipeline using OpenAI API and ChromaDB backed by a PostgreSQL question bank, automating generation of 1,000+ MCQs and cutting manual content creation time by 70%.",
+        "Built a RAG pipeline using OpenAI API and ChromaDB backed by a PostgreSQL question bank, generating 1,000+ MCQs and automating approximately 70% of question creation.",
         "Developed and maintained Python backend services exposing REST API endpoints consumed by the web platform.",
-        "Analysed user engagement data across 15% of the active user base to uncover behavioural trends.",
+        "Analysed user-engagement data to identify behavioural trends and inform user-targeting strategy.",
         "Designed and shipped an interactive financial literacy game used across outreach campaigns.",
         "Maintained codebase on GitHub using a PR-based workflow, participating in code reviews."
       ],
       "metrics": {
         "MCQs Generated": "1000+",
-        "Time Reduction": "70%",
-        "User Data Analysed": "15%"
+        "Question Creation Automated": "~70%"
       }
     }
   ],
@@ -50,7 +49,7 @@
         "Parallel Workers": "2",
         "Frameworks": "Phi-2, Mistral-7B"
       },
-      "github": "https://github.com/Sravya430"
+      "github": ""
     },
     {
       "title": "Production RAG System",
@@ -58,15 +57,15 @@
       "stack": ["OpenAI API", "ChromaDB", "PostgreSQL", "FastAPI"],
       "description": "A high-throughput RAG pipeline for educational content generation.",
       "details": [
-        "Automated generation of 1,000+ MCQs.",
+        "Generated 1,000+ MCQs and automated approximately 70% of question creation.",
         "Integrated ChromaDB for efficient vector retrieval.",
         "Built robust FastAPI backend for seamless integration."
       ],
       "metrics": {
-        "Automation": "70%",
+        "Question Automation": "~70%",
         "MCQs": "1000+"
       },
-      "github": "https://github.com/Sravya430"
+      "github": ""
     }
   ],
   "skills_v2": [
